@@ -15,7 +15,8 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./appsec/sast-semgrep"
+        "./appsec/sast-semgrep",
+        "./appsec/sast-bandit"
       ]
     },
     {
