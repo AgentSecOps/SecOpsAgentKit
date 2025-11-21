@@ -13,7 +13,7 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 
 ## Quick Start
 ```
-/plugin marketplace add https://github.com/DevSecAgentKit/SecOpsAgentKit.git
+/plugin marketplace add https://github.com/AgentSecOps/SecOpsAgentKit.git
 ```
 
 
