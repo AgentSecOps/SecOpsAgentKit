@@ -22,6 +22,7 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 ### Application Security (appsec/)
 
 - **[api-mitmproxy](skills/appsec/api-mitmproxy/SKILL.md)** - Interactive HTTPS proxy for API security testing with [mitmproxy](https://mitmproxy.org/) traffic interception and modification
+- **[api-spectral](skills/appsec/api-spectral/SKILL.md)** - API specification linting and security validation using [Spectral](https://docs.stoplight.io/docs/spectral) for OpenAPI and AsyncAPI
 - **[dast-ffuf](skills/appsec/dast-ffuf/SKILL.md)** - Fast web fuzzer using [ffuf](https://github.com/ffuf/ffuf) for directory enumeration and parameter fuzzing
 - **[dast-nuclei](skills/appsec/dast-nuclei/SKILL.md)** - Fast, template-based vulnerability scanning using ProjectDiscovery's [Nuclei](https://docs.projectdiscovery.io/tools/nuclei/overview)
 - **[dast-zap](skills/appsec/dast-zap/SKILL.md)** - Dynamic application security testing using [OWASP ZAP](https://www.zaproxy.org/docs/) (Zed Attack Proxy)
@@ -31,9 +32,10 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 
 ### DevSecOps (devsecops/)
 
-- **[secrets-gitleaks](skills/devsecops/secrets-gitleaks/SKILL.md)** - Hardcoded secret detection and prevention in git repositories using [Gitleaks](https://github.com/gitleaks/gitleaks)
-- **[iac-checkov](skills/devsecops/iac-checkov/SKILL.md)** - Infrastructure as Code security scanning using [Checkov](https://www.checkov.io/) with 750+ built-in policies
 - **[container-hadolint](skills/devsecops/container-hadolint/SKILL.md)** - Dockerfile security linting and best practice validation using [Hadolint](https://github.com/hadolint/hadolint)
+- **[iac-checkov](skills/devsecops/iac-checkov/SKILL.md)** - Infrastructure as Code security scanning using [Checkov](https://www.checkov.io/) with 750+ built-in policies
+- **[sca-trivy](skills/devsecops/sca-trivy/SKILL.md)** - Software Composition Analysis and container vulnerability scanning using [Trivy](https://aquasecurity.github.io/trivy/) for CVE detection
+- **[secrets-gitleaks](skills/devsecops/secrets-gitleaks/SKILL.md)** - Hardcoded secret detection and prevention in git repositories using [Gitleaks](https://github.com/gitleaks/gitleaks)
 
 ### Secure SDLC (secsdlc/)
 
@@ -45,9 +47,15 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 
 - **[policy-opa](skills/compliance/policy-opa/SKILL.md)** - Policy-as-code enforcement and compliance validation using [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/) (OPA)
 
+### Threat Modeling (threatmodel/)
+
+- **[pytm](skills/threatmodel/pytm/SKILL.md)** - Python-based threat modeling using [pytm](https://github.com/izar/pytm) for STRIDE analysis and data flow diagrams
+
 ### Incident Response (incident-response/)
 
 - **[detection-sigma](skills/incident-response/detection-sigma/SKILL.md)** - Generic detection rule creation and management using [Sigma](https://github.com/SigmaHQ/sigma) (universal SIEM rule format)
+- **[forensics-osquery](skills/incident-response/forensics-osquery/SKILL.md)** - SQL-powered forensic investigation and system interrogation using [osquery](https://osquery.io/) for endpoint analysis
+- **[ir-velociraptor](skills/incident-response/ir-velociraptor/SKILL.md)** - Endpoint visibility and digital forensics using [Velociraptor](https://docs.velociraptor.app/) for incident response at scale
 
 ### Offensive Security (offsec/)
 

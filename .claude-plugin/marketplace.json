@@ -1,5 +1,5 @@
 {
-  "name": "sec-ops-agent-kit-skills",
+  "name": "agent-sec-ops-kit-skills",
   "owner": {
     "name": "Sir AppSec",
     "email": "sirappsec@gmail.com"
@@ -20,6 +20,7 @@
         "./appsec/dast-zap",
         "./appsec/dast-nuclei",
         "./appsec/api-mitmproxy",
+        "./appsec/api-spectral",
         "./appsec/dast-ffuf",
         "./appsec/sca-blackduck"
       ]
@@ -32,7 +33,8 @@
       "skills": [
         "./devsecops/secrets-gitleaks",
         "./devsecops/iac-checkov",
-        "./devsecops/container-hadolint"
+        "./devsecops/container-hadolint",
+        "./devsecops/sca-trivy"
       ]
     },
     {
@@ -61,7 +63,18 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./incident-response/detection-sigma"
+        "./incident-response/detection-sigma",
+        "./incident-response/forensics-osquery",
+        "./incident-response/ir-velociraptor"
+      ]
+    },
+    {
+      "name": "threatmodel-skills",
+      "description": "Threat modeling and security architecture skills for STRIDE analysis, data flow diagrams, and risk assessment",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./threatmodel/pytm"
       ]
     },
     {
