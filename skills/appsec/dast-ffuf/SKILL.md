@@ -9,7 +9,7 @@ description: >
   (4) Testing authentication endpoints with credential fuzzing, (5) Finding backup files and sensitive
   data exposures, (6) Performing comprehensive web application reconnaissance.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: appsec
 tags: [dast, fuzzing, web-fuzzer, directory-enumeration, parameter-fuzzing, vhost-discovery, ffuf, reconnaissance]
 frameworks: [OWASP]

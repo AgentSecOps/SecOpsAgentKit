@@ -8,7 +8,7 @@ description: >
   policy-as-code in CI/CD pipelines, (5) Generating compliance reports with remediation guidance for
   cloud security posture management.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: devsecops
 tags: [iac, checkov, terraform, kubernetes, cloudformation, compliance, policy-as-code, cloud-security]
 frameworks: [PCI-DSS, HIPAA, SOC2, NIST, GDPR]

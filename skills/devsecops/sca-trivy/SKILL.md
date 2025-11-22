@@ -10,7 +10,7 @@ description: >
   pipelines with SARIF output, (5) Generating Software Bill of Materials (SBOM) in CycloneDX
   or SPDX format, (6) Prioritizing remediation by CVSS score and exploitability.
 version: 0.1.0
-maintainer: secops-agentkit
+maintainer: SirAppSec
 category: devsecops
 tags: [sca, trivy, container-security, vulnerability-scanning, sbom, iac-security, dependency-scanning, cvss]
 frameworks: [OWASP, CWE, NIST, PCI-DSS, SOC2]

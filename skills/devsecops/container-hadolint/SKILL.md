@@ -9,7 +9,7 @@ description: >
   container security into developer workflows, (6) Providing remediation guidance for insecure
   Dockerfile instructions.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: devsecops
 tags: [docker, hadolint, dockerfile, container-security, cis-benchmark, linting, ci-cd]
 frameworks: [CIS, OWASP]

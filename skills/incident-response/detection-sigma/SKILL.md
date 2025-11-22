@@ -8,7 +8,7 @@ description: >
   detection patterns, (4) Building detection-as-code pipelines, (5) Mapping detections to
   MITRE ATT&CK tactics, (6) Implementing compliance-based monitoring rules.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: incident-response
 tags: [sigma, detection, siem, threat-hunting, mitre-attack, detection-engineering, log-analysis]
 frameworks: [MITRE-ATT&CK, NIST, ISO27001]

@@ -728,6 +728,52 @@ Match instruction strictness to operation fragility:
 
 **Use scripts for low-freedom operations** to ensure reliability and consistency.
 
+## Skill Maintenance
+
+### Renaming a Skill
+
+If you need to rename an existing skill, follow these steps to ensure all references are updated:
+
+1. **Rename the directory**:
+   ```bash
+   mv skills/<category>/<old-name> skills/<category>/<new-name>
+   ```
+
+2. **Update SKILL.md frontmatter**:
+   - Change the `name` field to match the new directory name
+   - Update the `description` if needed to reflect the new name
+   - Reorder `tags` if necessary (put most relevant tags first)
+
+3. **Update README.md**:
+   - Find the skill entry in the appropriate category section
+   - Update the skill name in the markdown link
+   - Update the file path: `skills/<category>/<new-name>/SKILL.md`
+   - Ensure alphabetical ordering within the category
+
+4. **Update marketplace.json**:
+   - Locate the skill path in `.claude-plugin/marketplace.json`
+   - Change `./<category>/<old-name>` to `./<category>/<new-name>`
+   - Maintain alphabetical ordering within the plugin's skills array
+
+5. **Validate the renamed skill**:
+   ```bash
+   python3 ./scripts/validate_skill.py skills/<category>/<new-name>
+   ```
+
+6. **Test the skill**: Verify that the skill loads correctly and functions as expected
+
+**Example**:
+```bash
+# Rename sca-grype to container-grype
+mv skills/devsecops/sca-grype skills/devsecops/container-grype
+
+# Update SKILL.md frontmatter: name: container-grype
+# Update README.md: [container-grype](skills/devsecops/container-grype/SKILL.md)
+# Update marketplace.json: "./devsecops/container-grype"
+
+python3 ./scripts/validate_skill.py skills/devsecops/container-grype
+```
+
 ## Getting Help
 
 - Read the [Claude Code Skills Documentation](https://docs.claude.com/en/docs/claude-code/skills)

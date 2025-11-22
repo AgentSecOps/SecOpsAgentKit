@@ -7,7 +7,7 @@ description: >
   applications, (3) Automating security scans in CI/CD pipelines with Docker containers, (4) Conducting authenticated
   testing with session management, (5) Generating security reports with OWASP and CWE mappings for compliance.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: appsec
 tags: [dast, zap, web-security, owasp, vulnerability-scanning, api-testing, penetration-testing]
 frameworks: [OWASP, CWE]

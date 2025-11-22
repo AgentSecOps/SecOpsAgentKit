@@ -11,7 +11,7 @@ description: >
   configuration for compromise indicators, (6) Building detection queries for continuous
   monitoring with osqueryd.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: incident-response
 tags: [forensics, osquery, incident-response, threat-hunting, endpoint-detection, dfir, live-forensics, sql]
 frameworks: [MITRE-ATT&CK, NIST]

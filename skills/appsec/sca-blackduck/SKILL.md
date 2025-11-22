@@ -10,7 +10,7 @@ description: >
   guidance for vulnerable dependencies with CVE and CWE mappings, (6) Assessing supply
   chain security risks and third-party component threats.
 version: 0.1.0
-maintainer: secops-agentkit
+maintainer: SirAppSec
 category: appsec
 tags: [sca, blackduck, dependency-scanning, vulnerability-management, license-compliance, supply-chain, cve, owasp]
 frameworks: [OWASP, CWE, NIST, SOC2, PCI-DSS]

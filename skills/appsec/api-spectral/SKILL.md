@@ -10,7 +10,7 @@ description: >
   exposure issues in API definitions, (5) Ensuring API specifications comply with organizational
   security standards and regulatory requirements.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: appsec
 tags: [api-security, openapi, asyncapi, linting, spectral, api-governance, owasp-api, specification-validation]
 frameworks: [OWASP]

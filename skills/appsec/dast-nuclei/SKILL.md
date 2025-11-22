@@ -9,7 +9,7 @@ description: >
   (4) Creating custom security templates for organization-specific vulnerability patterns, (5) Scanning
   multiple targets efficiently with concurrent execution and rate limiting controls.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: appsec
 tags: [dast, nuclei, vulnerability-scanning, cve, owasp, api-testing, automation, templates]
 frameworks: [OWASP, CWE, CVE]

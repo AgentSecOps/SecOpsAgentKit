@@ -9,7 +9,7 @@ description: >
   Debugging mobile app or thick client API communications, (5) Automating API security tests with
   Python scripts, (6) Exporting traffic in HAR format for analysis.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: appsec
 tags: [api-testing, proxy, https, intercepting-proxy, traffic-analysis, mitmproxy, har-export, websockets]
 frameworks: [OWASP]

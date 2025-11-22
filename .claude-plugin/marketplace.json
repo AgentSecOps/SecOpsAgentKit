@@ -33,6 +33,7 @@
       "skills": [
         "./devsecops/secrets-gitleaks",
         "./devsecops/iac-checkov",
+        "./devsecops/container-grype",
         "./devsecops/container-hadolint",
         "./devsecops/sca-trivy"
       ]

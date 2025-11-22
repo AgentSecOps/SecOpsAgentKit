@@ -9,7 +9,7 @@ description: >
   (5) Establishing baseline secret detection and tracking new exposures, (6) Remediating
   historical secret exposures in git history.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: devsecops
 tags: [secrets, gitleaks, secret-scanning, devsecops, ci-cd, credentials, api-keys, compliance]
 frameworks: [OWASP, CWE, PCI-DSS, SOC2, GDPR]

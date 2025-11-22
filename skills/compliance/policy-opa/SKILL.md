@@ -8,7 +8,7 @@ description: >
   (5) Integrating policy checks into CI/CD pipelines, (6) Auditing configuration drift against
   organizational security standards, (7) Implementing least-privilege access controls.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: compliance
 tags: [opa, policy-as-code, compliance, rego, kubernetes, admission-control, soc2, gdpr, pci-dss, hipaa]
 frameworks: [SOC2, PCI-DSS, GDPR, HIPAA, NIST, ISO27001]

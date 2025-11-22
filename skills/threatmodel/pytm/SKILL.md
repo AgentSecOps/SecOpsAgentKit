@@ -10,7 +10,7 @@ description: >
   with STRIDE categories and mitigation recommendations, (6) Maintaining threat models
   as code for version control and automation.
 version: 0.1.0
-maintainer: secops-agentkit
+maintainer: SirAppSec
 category: threatmodel
 tags: [threat-modeling, stride, dfd, security-architecture, pytm, appsec, risk-analysis]
 frameworks: [STRIDE, OWASP, MITRE-ATT&CK, NIST]

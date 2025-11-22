@@ -9,7 +9,7 @@ description: >
   and CWE mappings, (5) Creating custom security rules for organization-specific patterns,
   (6) Analyzing dependencies for known vulnerabilities.
 version: 0.1.0
-maintainer: secops-agentkit
+maintainer: SirAppSec
 category: appsec
 tags: [sast, semgrep, vulnerability-scanning, code-security, owasp, cwe, security-review]
 frameworks: [OWASP, CWE, SANS-25]

@@ -9,7 +9,7 @@ description: >
   preservation, (5) Monitoring endpoints for security events, (6) Creating custom
   forensic artifacts for specific threat scenarios.
 version: 0.1.0
-maintainer: asrour
+maintainer: SirAppSec
 category: incident-response
 tags: [forensics, incident-response, endpoint-detection, threat-hunting, vql, dfir, live-response, evidence-collection]
 frameworks: [MITRE-ATT&CK, NIST]
