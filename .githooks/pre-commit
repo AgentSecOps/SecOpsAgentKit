@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# pre-commit hook: validate any staged SKILL.md files before commit.
+# Install with: ./scripts/install_hooks.sh
+set -euo pipefail
+
+# Find skill directories with staged SKILL.md files
+STAGED_SKILLS=$(git diff --cached --name-only | grep 'SKILL\.md$' | grep -v '^skills/_template/' | sed 's|/SKILL\.md$||' || true)
+
+if [[ -z "$STAGED_SKILLS" ]]; then
+  exit 0  # No skill changes staged — nothing to validate
+fi
+
+if ! command -v python3 &>/dev/null; then
+  echo "pre-commit: python3 not found, skipping skill validation" >&2
+  exit 0
+fi
+
+VALIDATE="$(git rev-parse --show-toplevel)/scripts/validate_skill.py"
+if [[ ! -x "$VALIDATE" ]]; then
+  echo "pre-commit: $VALIDATE not found or not executable, skipping skill validation" >&2
+  exit 0
+fi
+
+echo "pre-commit: validating staged skills..."
+FAILED=0
+
+while IFS= read -r skill_dir; do
+  if [[ -d "$skill_dir" ]]; then
+    if ! python3 "$VALIDATE" "$skill_dir"; then
+      FAILED=1
+    fi
+  fi
+done <<< "$STAGED_SKILLS"
+
+if [[ "$FAILED" -ne 0 ]]; then
+  echo ""
+  echo "pre-commit: skill validation failed. Fix the issues above before committing."
+  echo "  To bypass (not recommended): git commit --no-verify"
+  exit 1
+fi
+
+echo "pre-commit: all skills passed validation."

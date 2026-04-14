@@ -40,6 +40,7 @@ references:                               # External documentation
 - `threatmodel` - Threat Modeling & Risk Analysis
 - `compliance` - Compliance & Security Auditing
 - `incident-response` - Security Incident Response
+- `offsec` - Offensive Security & Penetration Testing
 
 ## Common Security Frameworks
 
