@@ -19,11 +19,17 @@ Thank you for contributing security operations skills to the community! This gui
 
 ## Quick Start
 
+**One-time setup** (install git hooks for automatic validation):
+```bash
+./scripts/install_hooks.sh
+```
+
 1. **Use the template**: Copy `skills/_template/` as your starting point
 2. **Initialize your skill**: Run `./scripts/init_skill.sh <skill-name> <category>`
 3. **Follow the structure**: See [Skill Structure](#skill-structure) below
-4. **Test thoroughly**: Validate your skill works in real security scenarios
-5. **Submit a PR**: Open a pull request with the `[skill]` tag
+4. **Validate your skill**: Run `./scripts/validate_skill.py skills/<category>/<skill-name>`
+5. **Test thoroughly**: Validate your skill works in real security scenarios
+6. **Submit a PR**: Open a pull request with the `[skill]` tag
 
 ## Skill Requirements
 
@@ -45,7 +51,7 @@ description: >
   (3) Security context
 version: 0.1.0
 maintainer: github-username
-category: appsec|devsecops|secsdlc|threatmodel|compliance|incident-response
+category: appsec|devsecops|secsdlc|threatmodel|compliance|incident-response|offsec
 tags: [relevant, security, tags]
 frameworks: [OWASP|CWE|MITRE-ATT&CK|NIST|SOC2]
 ---
@@ -63,7 +69,8 @@ skills/
 ├── secsdlc/                      # Secure SDLC skills
 ├── threatmodel/                  # Threat Modeling skills
 ├── compliance/                   # Compliance & Audit skills
-└── incident-response/            # Incident Response skills
+├── incident-response/            # Incident Response skills
+└── offsec/                       # Offensive Security skills
 
 skills/<category>/<skill-name>/
 ├── SKILL.md                      # Required: Main skill file
@@ -141,6 +148,7 @@ Primary security domain (choose one):
 - `threatmodel` - Threat Modeling & Risk Analysis
 - `compliance` - Compliance & Security Auditing
 - `incident-response` - Security Incident Response
+- `offsec` - Offensive Security & Penetration Testing
 
 ```yaml
 category: appsec
