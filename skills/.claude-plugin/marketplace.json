@@ -1,0 +1,77 @@
+{
+  "plugins": [
+    {
+      "name": "appsec-skills",
+      "description": "Application Security skills: SAST, DAST, API security, and dependency scanning",
+      "skills": [
+        "./appsec/api-mitmproxy",
+        "./appsec/api-spectral",
+        "./appsec/dast-ffuf",
+        "./appsec/dast-nuclei",
+        "./appsec/dast-zap",
+        "./appsec/sast-bandit",
+        "./appsec/sast-semgrep",
+        "./appsec/sca-blackduck"
+      ]
+    },
+    {
+      "name": "devsecops-skills",
+      "description": "DevSecOps and CI/CD security skills: container scanning, IaC security, secrets detection",
+      "skills": [
+        "./devsecops/container-grype",
+        "./devsecops/container-hadolint",
+        "./devsecops/iac-checkov",
+        "./devsecops/sca-trivy",
+        "./devsecops/secrets-gitleaks",
+        "./devsecops/vuln-defectdojo"
+      ]
+    },
+    {
+      "name": "secsdlc-skills",
+      "description": "Secure SDLC skills: code review automation, SBOM generation, supply chain security",
+      "skills": [
+        "./secsdlc/reviewdog",
+        "./secsdlc/sast-horusec",
+        "./secsdlc/sbom-syft"
+      ]
+    },
+    {
+      "name": "threatmodel-skills",
+      "description": "Threat modeling skills: data flow diagrams, STRIDE analysis, attack tree modeling",
+      "skills": [
+        "./threatmodel/pytm"
+      ]
+    },
+    {
+      "name": "compliance-skills",
+      "description": "Compliance and auditing skills: policy enforcement, benchmark hardening, audit reporting",
+      "skills": [
+        "./compliance/policy-opa"
+      ]
+    },
+    {
+      "name": "incident-response-skills",
+      "description": "Incident response skills: forensics, threat hunting, detection engineering",
+      "skills": [
+        "./incident-response/detection-sigma",
+        "./incident-response/forensics-osquery",
+        "./incident-response/ir-velociraptor"
+      ]
+    },
+    {
+      "name": "offsec-skills",
+      "description": "Offensive security skills: penetration testing, network analysis, vulnerability exploitation",
+      "skills": [
+        "./offsec/analysis-tshark",
+        "./offsec/crack-hashcat",
+        "./offsec/network-netcat",
+        "./offsec/ot-security-assessment",
+        "./offsec/pentest-metasploit",
+        "./offsec/privesc-linpeas",
+        "./offsec/recon-nmap",
+        "./offsec/webapp-nikto",
+        "./offsec/webapp-sqlmap"
+      ]
+    }
+  ]
+}
