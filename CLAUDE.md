@@ -45,7 +45,7 @@ All skills use YAML frontmatter with strict validation:
 
 **Versioning**: Semantic versioning (MAJOR.MINOR.PATCH). New skills start at 0.1.0.
 
-**Categories**: Must be one of seven valid categories: `appsec`, `devsecops`, `secsdlc`, `threatmodel`, `compliance`, `incident-response`, `offsec`
+**Categories**: Must be one of six valid categories: `appsec`, `devsecops`, `secsdlc`, `threatmodel`, `compliance`, `incident-response`
 
 **Frameworks**: List security frameworks referenced (OWASP, CWE, MITRE-ATT&CK, NIST, SOC2, PCI-DSS, GDPR, ISO27001, HIPAA)
 
@@ -63,7 +63,7 @@ All skills use YAML frontmatter with strict validation:
 
 The initialization script:
 - Validates skill name (must be kebab-case)
-- Validates category (must be one of seven valid categories)
+- Validates category (must be one of six valid categories)
 - Creates directory structure from `skills/_template/`
 - Auto-populates frontmatter with skill name and category
 - Makes scripts executable
