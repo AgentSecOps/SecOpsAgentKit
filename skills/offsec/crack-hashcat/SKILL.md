@@ -407,6 +407,31 @@ echo -e "\nCommon Password Patterns:"
 grep -E "^password|123456|qwerty" "$CRACKED_FILE" | wc -l
 ```
 
+### Reporting
+
+```bash
+# Generate password audit report
+cat > audit_report.sh <<'EOF'
+#!/bin/bash
+TOTAL=$(wc -l < hashes.txt)
+CRACKED=$(hashcat -m 1000 hashes.txt --show | wc -l)
+PERCENT=$((CRACKED * 100 / TOTAL))
+
+echo "Password Audit Report"
+echo "===================="
+echo "Total Hashes: $TOTAL"
+echo "Cracked: $CRACKED"
+echo "Success Rate: $PERCENT%"
+echo ""
+echo "Recommendations:"
+echo "- Implement minimum password length of 12 characters"
+echo "- Require complex passwords (upper, lower, digit, special)"
+echo "- Enable multi-factor authentication"
+echo "- Implement password history and rotation"
+EOF
+chmod +x audit_report.sh
+```
+
 ## Troubleshooting
 
 ### Issue: Slow Cracking Speed

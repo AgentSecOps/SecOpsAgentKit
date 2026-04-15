@@ -151,9 +151,40 @@ nmap -p 1-1024,3000-9000 -iL live_hosts.txt
   sudo nmap -A <target-ip>
   ```
 
-**Timing**: `-T0` (paranoid/IDS evasion) through `-T5` (insane/fast); `-T3` is default; `-T4` for reliable networks.
+**Timing and performance**:
 
-**Rate limiting**: `--max-rate 100` (packets/sec), `--scan-delay 1s` (avoid detection).
+```bash
+# Paranoid (0) - Extremely slow, IDS evasion
+nmap -T0 <target-ip>
+
+# Sneaky (1) - Very slow, IDS evasion
+nmap -T1 <target-ip>
+
+# Polite (2) - Slows down to use less bandwidth
+nmap -T2 <target-ip>
+
+# Normal (3) - Default timing
+nmap -T3 <target-ip>
+
+# Aggressive (4) - Faster, assumes reliable network
+nmap -T4 <target-ip>
+
+# Insane (5) - Very fast, may miss results
+nmap -T5 <target-ip>
+```
+
+**Rate limiting for safety**:
+
+```bash
+# Limit to 100 packets/second
+nmap --max-rate 100 <target-ip>
+
+# Minimum 10 packets/second
+nmap --min-rate 10 <target-ip>
+
+# Scan with delays to avoid detection
+nmap --scan-delay 1s <target-ip>
+```
 
 ### 4. Service Enumeration
 
@@ -241,7 +272,21 @@ nmap --script=smb-vuln-ms17-010,smb-vuln-cve-2017-7494 <target-ip>
 nmap --script=http-brute --script-args http-brute.path=/admin <target-ip>
 ```
 
-**NSE script categories**: `auth`, `brute`, `default` (-sC), `discovery`, `exploit`, `intrusive`, `malware`, `safe`, `version`, `vuln`
+**NSE script categories**:
+- **auth**: Authentication testing
+- **broadcast**: Network broadcast/multicast discovery
+- **brute**: Brute-force password auditing
+- **default**: Default safe scripts (-sC)
+- **discovery**: Network and service discovery
+- **dos**: Denial of service testing (use with caution)
+- **exploit**: Exploitation attempts (authorized only)
+- **external**: External resource queries (WHOIS, etc.)
+- **fuzzer**: Fuzzing attacks
+- **intrusive**: Intrusive scanning (may crash services)
+- **malware**: Malware detection
+- **safe**: Safe scripts unlikely to crash services
+- **version**: Version detection enhancement
+- **vuln**: Vulnerability detection
 
 **Common vulnerability detection scripts**:
 
@@ -301,21 +346,65 @@ grep 'Ports:' scan_results.gnmap | awk '{print $2, $5}'
 
 ### 8. Firewall and IDS Evasion
 
+Techniques to evade detection (authorized testing only):
+
 ```bash
-sudo nmap -f <target-ip>                           # Fragment packets
-sudo nmap -D RND:10 <target-ip>                    # Random decoys
-nmap --randomize-hosts -iL targets.txt             # Randomize order
-sudo nmap -sI <zombie-host> <target-ip>            # Idle scan
-nmap --proxies http://proxy:8080 <target-ip>       # Use proxy
+# Fragment packets
+sudo nmap -f <target-ip>
+
+# Use decoys
+sudo nmap -D RND:10 <target-ip>
+sudo nmap -D decoy1,decoy2,ME,decoy3 <target-ip>
+
+# Spoof source IP (requires raw packet privileges)
+sudo nmap -S <spoofed-ip> -e <interface> <target-ip>
+
+# Randomize target order
+nmap --randomize-hosts -iL targets.txt
+
+# Use proxy
+nmap --proxies http://proxy:8080 <target-ip>
+
+# Idle scan (zombie host required)
+sudo nmap -sI <zombie-host> <target-ip>
 ```
 
 ## Security Considerations
 
+### Authorization & Legal Compliance
+
 - **Written Permission**: Obtain explicit authorization before scanning any network
-- **Rate Limiting**: Use `--max-rate` to avoid overwhelming targets; schedule during maintenance windows
-- **Disruption Risk**: DOS/exploit scripts can crash services; validate findings before reporting
-- **Audit Logging**: Document timestamps, source IP, target ranges, ports, arguments, and findings
-- **Compliance**: PTES (reconnaissance), MITRE ATT&CK T1046, PCI-DSS 11.2, ISO 27001 A.12.6
+- **Scope Definition**: Only scan explicitly authorized IP ranges and ports
+- **Disruption Risk**: Some scans (DOS, exploit scripts) can crash services
+- **Privacy**: Service enumeration may expose sensitive information
+- **Log Traces**: Scanning activities are typically logged by firewalls and IDS
+
+### Operational Security
+
+- **Rate Limiting**: Use `--max-rate` to avoid overwhelming targets
+- **Timing**: Schedule scans during approved maintenance windows
+- **Bandwidth**: Consider network impact, especially for large scans
+- **Noise**: Aggressive scans are easily detected by security monitoring
+- **False Positives**: Validate findings before reporting vulnerabilities
+
+### Audit Logging
+
+Document all reconnaissance activities:
+- Scan start and end timestamps
+- Source IP address and scanner hostname
+- Target IP ranges and ports scanned
+- Nmap command-line arguments used
+- Number of hosts discovered and ports found
+- Vulnerabilities identified via NSE scripts
+- Any service disruptions or anomalies
+
+### Compliance
+
+- **PTES**: Reconnaissance phase of Penetration Testing Execution Standard
+- **OWASP**: ASVS verification requirements for network security
+- **MITRE ATT&CK**: T1046 (Network Service Scanning)
+- **PCI-DSS 11.2**: External and internal vulnerability scanning
+- **ISO 27001**: A.12.6 Technical vulnerability management
 
 ## Common Patterns
 
@@ -380,33 +469,162 @@ nmap -p 445 --script=smb-vuln* -iL smb_hosts.txt -oA smb_vulns
 nmap -p 445 --script=smb-enum-shares,smb-enum-users -iL smb_hosts.txt -oA smb_shares
 ```
 
+### Pattern 5: Database Server Discovery
+
+```bash
+# Scan for common database ports
+nmap -sV -p 1433,1521,3306,5432,5984,6379,9200,27017 <target-network>/24 -oA database_scan
+
+# MySQL enumeration
+nmap -p 3306 --script=mysql-info,mysql-databases,mysql-variables <target-ip>
+
+# PostgreSQL enumeration
+nmap -p 5432 --script=pgsql-brute <target-ip>
+
+# MongoDB enumeration
+nmap -p 27017 --script=mongodb-info,mongodb-databases <target-ip>
+
+# Redis enumeration
+nmap -p 6379 --script=redis-info <target-ip>
+```
+
 ## Integration Points
 
 ### CI/CD Integration
 
+Automated security scanning in pipelines:
+
 ```bash
-# Fail build if vulnerabilities found
-nmap -Pn -sV --script=vuln -p 21,22,25,80,443,3389,8080 "$TARGET_NETWORK" -oA security_scan
-grep -i "VULNERABLE" security_scan.nmap && { echo "CRITICAL: Vulnerabilities detected!"; exit 1; }
+#!/bin/bash
+# ci_network_scan.sh - Continuous network security validation
+
+TARGET_NETWORK="$1"
+OUTPUT_DIR="scan_results/$(date +%Y%m%d_%H%M%S)"
+
+mkdir -p "$OUTPUT_DIR"
+
+# Quick security scan
+nmap -Pn -sV --script=vuln -p 21,22,25,80,443,3389,8080 \
+  "$TARGET_NETWORK" -oA "$OUTPUT_DIR/security_scan"
+
+# Parse results for critical findings
+if grep -i "VULNERABLE" "$OUTPUT_DIR/security_scan.nmap"; then
+  echo "CRITICAL: Vulnerabilities detected!"
+  exit 1
+fi
+
+echo "Security scan completed successfully"
+exit 0
 ```
 
 ### Security Tools Integration
 
-- **Metasploit**: Import XML with `db_import`
-- **Vulnerability Scanners**: Feed results to Nessus, OpenVAS, Qualys
-- **SIEM**: Parse Nmap output for security monitoring
-- **MITRE ATT&CK**: T1595 (Active Scanning), T1046 (Network Service Scanning)
+- **Metasploit Integration**: Import Nmap XML with `db_import`
+- **Vulnerability Scanners**: Feed Nmap results to Nessus, OpenVAS, Qualys
+- **SIEM Integration**: Parse Nmap output for security monitoring
+- **Asset Management**: Update CMDB with discovered hosts and services
+- **Shodan/Censys**: Validate external exposure findings
+
+### MITRE ATT&CK Mapping
+
+Map Nmap reconnaissance to ATT&CK framework:
+
+- **Reconnaissance**: T1595 (Active Scanning)
+  - T1595.001 (Scanning IP Blocks)
+  - T1595.002 (Vulnerability Scanning)
+- **Discovery**: T1046 (Network Service Scanning)
+- **Discovery**: T1040 (Network Sniffing)
+- **Credential Access**: T1110 (Brute Force) - when using NSE brute scripts
 
 ## Troubleshooting
 
-- **No results despite hosts online**: Try `nmap -Pn` (skip ping) or multiple discovery techniques: `nmap -PE -PS22,80,443 -PA3389 -PU53,161`
-- **Scan too slow**: Use `-T4`, scan fewer ports with `-F`, or use `masscan -p 1-65535 --rate 10000` for high-speed pre-scan
-- **False positives in vuln scripts**: Verify manually, use `--version-intensity 9`, run specific scripts instead of broad categories
-- **Blocked by firewall/IDS**: Use `-T1 --scan-delay 1s`, fragment packets with `-f`, use source port 53 with `-g 53`
+### Issue: No Results Despite Hosts Being Online
+
+**Causes**:
+- ICMP blocked by firewall
+- Host-based firewall dropping probes
+- Network ACLs filtering traffic
+
+**Solutions**:
+```bash
+# Skip ping, assume all hosts up
+nmap -Pn <target-ip>
+
+# Try TCP ping instead of ICMP
+nmap -PS80,443 -PA3389 <target-ip>
+
+# Try multiple discovery techniques
+nmap -PE -PS22,80,443 -PA3389 -PU53,161 <target-ip>
+```
+
+### Issue: Scan Too Slow
+
+**Solutions**:
+```bash
+# Increase timing template
+nmap -T4 <target-ip>
+
+# Scan fewer ports
+nmap -F <target-ip>  # Top 100 ports
+nmap --top-ports 1000 <target-ip>
+
+# Parallelize by splitting targets
+nmap -T4 192.168.1.1-50 &
+nmap -T4 192.168.1.51-100 &
+nmap -T4 192.168.1.101-150 &
+wait
+
+# Use masscan for very fast port scanning
+masscan -p 1-65535 --rate 10000 <target-network>/24
+```
+
+### Issue: False Positives in Vulnerability Scripts
+
+**Solutions**:
+- Manually verify findings with specific exploit tools
+- Check service version against CVE databases
+- Use `--version-intensity 9` for more accurate version detection
+- Run vulnerability-specific NSE scripts instead of broad categories
+- Cross-reference with authenticated vulnerability scanners
+
+### Issue: Getting Blocked by Firewall/IDS
+
+**Solutions**:
+```bash
+# Slow down scan
+nmap -T1 --scan-delay 1s <target-ip>
+
+# Fragment packets
+sudo nmap -f <target-ip>
+
+# Randomize scan order
+nmap --randomize-hosts -iL targets.txt
+
+# Use source port 53 (often allowed)
+nmap -g 53 <target-ip>
+
+# Split into smaller scans over time
+nmap -p 1-1000 <target-ip>
+# Wait several hours
+nmap -p 1001-2000 <target-ip>
+```
 
 ## Defensive Considerations
 
-Detect Nmap scanning with Network IDS (Snort/Suricata) signature detection, firewall logs for single-source connection bursts, port scan detection for incomplete SYN sequences, honeypots for decoy service access, and traffic analysis for fragmentation anomalies. Deploy rate limiting on border firewalls and port knocking for sensitive services.
+Organizations can detect Nmap scanning by:
+
+- **Network IDS**: Signature detection of scan patterns (vertical/horizontal sweeps)
+- **Firewall Logs**: Multiple connection attempts from single source
+- **Port Scan Detection**: Monitoring for SYN packets without completion
+- **Honeypots**: Triggering alerts when accessing decoy services
+- **Traffic Analysis**: Unusual packet patterns (fragmentation, timing anomalies)
+
+Enhance defensive posture:
+- Deploy network intrusion detection systems (Snort, Suricata)
+- Enable firewall logging and monitor for scan patterns
+- Use port knocking or service hiding for sensitive services
+- Implement rate limiting on border firewalls
+- Deploy honeypots to detect and track reconnaissance
 
 ## References
 

@@ -496,3 +496,7 @@ regexes = ['''key\s*=\s*EXAMPLE''']
 - [Gitleaks Official Documentation](https://github.com/gitleaks/gitleaks)
 - [OWASP A07:2021 - Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/)
 - [CWE-798: Use of Hard-coded Credentials](https://cwe.mitre.org/data/definitions/798.html)
+- [CWE-259: Use of Hard-coded Password](https://cwe.mitre.org/data/definitions/259.html)
+- [CWE-321: Use of Hard-coded Cryptographic Key](https://cwe.mitre.org/data/definitions/321.html)
+- [PCI-DSS Requirements](https://www.pcisecuritystandards.org/)
+- [SOC2 Security Criteria](https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html)

@@ -324,7 +324,43 @@ Dataflow(app, db, "SQL/TLS").data = "user data, transactions"
 tm.process()
 ```
 
-### Pattern 2: Adding Custom Threats
+### Pattern 2: Cloud Native Microservices
+
+```python
+from pytm import TM, Lambda, Datastore, Dataflow, Boundary, Actor
+
+tm = TM("Cloud Microservices")
+
+cloud = Boundary("Cloud Provider VPC")
+user = Actor("Mobile App")
+
+# Serverless functions
+api_gateway = Lambda("API Gateway")
+api_gateway.inBoundary = cloud
+api_gateway.implementsAPI = True
+
+auth_fn = Lambda("Auth Function")
+auth_fn.inBoundary = cloud
+
+# Managed services
+cache = Datastore("Redis Cache")
+cache.inBoundary = cloud
+cache.isEncrypted = True
+
+db = Datastore("DynamoDB")
+db.inBoundary = cloud
+db.isEncryptedAtRest = True
+
+# Data flows
+Dataflow(user, api_gateway, "API Call").protocol = "HTTPS"
+Dataflow(api_gateway, auth_fn, "Auth").protocol = "internal"
+Dataflow(auth_fn, cache, "Session").isEncrypted = True
+Dataflow(api_gateway, db, "Query").isEncrypted = True
+
+tm.process()
+```
+
+### Pattern 3: Adding Custom Threats
 
 Define organization-specific threats:
 
@@ -445,6 +481,88 @@ python -c "from pytm import TM; tm = TM('test'); tm.process()"
 3. Schedule quarterly threat model reviews
 4. Link threat model updates to architecture review board approvals
 5. Use `scripts/check_mitigations.py` to validate completeness
+
+## Advanced Configuration
+
+### Custom Threat Definitions
+
+Create organization-specific threat library:
+
+```python
+# custom_threats.py
+from pytm import Threat
+
+def add_custom_threats(tm):
+    """Add organization-specific threats to threat model"""
+
+    # Cloud-specific threats
+    cloud_misconfiguration = Threat(
+        id="CLOUD-001",
+        description="Misconfigured cloud storage bucket exposes sensitive data",
+        condition="datastore.inBoundary.name == 'Cloud' and not datastore.isEncrypted",
+        mitigation="Enable encryption at rest and bucket policies"
+    )
+
+    # API-specific threats
+    api_abuse = Threat(
+        id="API-001",
+        description="API endpoint abuse through lack of rate limiting",
+        condition="server.implementsAPI and not server.implementsRateLimiting",
+        mitigation="Implement rate limiting and API key rotation"
+    )
+
+    return [cloud_misconfiguration, api_abuse]
+```
+
+### Risk Scoring Integration
+
+Add DREAD scoring to threats:
+
+```python
+class ScoredThreat(Threat):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.damage = 0        # 0-10
+        self.reproducibility = 0
+        self.exploitability = 0
+        self.affected_users = 0
+        self.discoverability = 0
+
+    def dread_score(self):
+        return (self.damage + self.reproducibility + self.exploitability +
+                self.affected_users + self.discoverability) / 5
+
+# Usage
+threat = ScoredThreat(
+    target=component,
+    description="SQL Injection",
+    damage=9,
+    reproducibility=8,
+    exploitability=7,
+    affected_users=10,
+    discoverability=6
+)
+print(f"DREAD Score: {threat.dread_score()}/10")
+```
+
+### Diagram Customization
+
+Customize DFD output with graphviz attributes:
+
+```python
+# Set custom colors for trust boundaries
+internet.color = "red"
+dmz.color = "orange"
+internal.color = "green"
+
+# Customize diagram output
+tm.graph_options = {
+    "rankdir": "LR",  # Left to right layout
+    "bgcolor": "white",
+    "fontname": "Arial",
+    "fontsize": "12"
+}
+```
 
 ## References
 
