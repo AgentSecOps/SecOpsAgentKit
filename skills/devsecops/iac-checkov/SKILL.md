@@ -385,38 +385,12 @@ python3 scripts/checkov_scan.py \
   --compliance CIS,PCI-DSS
 ```
 
-### Pattern 3: Policy-as-Code Repository
-
-Maintain centralized policy repository:
-
-```
-policies/
-├── custom_checks/
-│   ├── aws/
-│   │   ├── require_encryption.py
-│   │   └── require_tags.py
-│   ├── kubernetes/
-│   │   └── require_psp.py
-├── .checkov.yaml          # Global config
-└── suppression_list.txt   # Approved suppressions
-```
-
-### Pattern 4: Compliance-Driven Scanning
-
-Focus on specific compliance requirements:
+### Pattern 3: Compliance-Driven Scanning
 
 ```bash
-# CIS AWS Foundations Benchmark
-checkov -d ./terraform --check CIS_AWS
-
-# PCI-DSS compliance
-checkov -d ./terraform --framework terraform \
-  --check CKV_AWS_19,CKV_AWS_21,CKV_AWS_61 \
-  -o json --output-file-path ./pci-dss-report
-
-# HIPAA compliance
-checkov -d ./terraform --framework terraform \
-  --compact --check CKV_AWS_17,CKV_AWS_19,CKV_AWS_61,CKV_AWS_93
+checkov -d ./terraform --check CIS_AWS                           # CIS AWS Foundations
+checkov -d ./terraform --check CKV_AWS_19,CKV_AWS_21,CKV_AWS_61 # PCI-DSS key checks
+checkov -d ./terraform --compact --check CKV_AWS_17,CKV_AWS_19,CKV_AWS_61,CKV_AWS_93  # HIPAA
 ```
 
 ## Integration Points
@@ -432,49 +406,11 @@ checkov -d ./terraform --framework terraform \
 
 ## Troubleshooting
 
-### Issue: Too Many Findings Overwhelming Team
-
-**Solution**: Use progressive adoption with baselines:
-
-```bash
-# Create baseline with current state
-checkov -d ./terraform --create-baseline
-
-# Only fail on new issues
-checkov -d ./terraform --baseline .checkov.baseline --soft-fail-on LOW,MEDIUM
-```
-
-### Issue: False Positives for Legitimate Use Cases
-
-**Solution**: Use inline suppressions with justification:
-
-```hcl
-# Provide clear business justification
-resource "aws_security_group" "allow_office" {
-  # checkov:skip=CKV_AWS_23:Office IP range needs SSH access for developers
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.113.0/24"]  # Office IP range
-  }
-}
-```
-
-### Issue: Scan Takes Too Long
-
-**Solution**: Optimize scan scope:
-
-```bash
-# Skip unnecessary paths
-checkov -d ./terraform \
-  --skip-path .terraform/ \
-  --skip-path modules/vendor/ \
-  --skip-framework secrets
-
-# Use compact output
-checkov -d ./terraform --compact --quiet
-```
+- **Too many findings**: Create baseline first (`--create-baseline`), then only fail on new issues (`--baseline .checkov.baseline --soft-fail-on LOW,MEDIUM`)
+- **False positives**: Use inline suppressions: `# checkov:skip=CKV_AWS_23:Justification here`
+- **Scan too slow**: `--skip-path .terraform/ --skip-path modules/vendor/ --compact --quiet`
+- **Custom policies not loading**: `checkov -d ./terraform --external-checks-dir ./custom_checks -v`
+- **Private Terraform modules**: `terraform init` first, then `checkov -d .`
 
 ## References
 
