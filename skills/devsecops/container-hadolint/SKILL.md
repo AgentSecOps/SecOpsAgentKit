@@ -403,50 +403,6 @@ Validate with Hadolint:
 hadolint Dockerfile  # Should pass with no errors
 ```
 
-### Pattern 4: CI/CD with Automated Remediation Suggestions
-
-Provide actionable feedback in pull requests:
-
-```bash
-# In CI pipeline
-hadolint -f json Dockerfile > hadolint.json
-
-# Generate remediation suggestions
-./scripts/hadolint_scan.py \
-  --input hadolint.json \
-  --format markdown \
-  --output pr-comment.md
-
-# Post to PR comment (using gh CLI)
-gh pr comment --body-file pr-comment.md
-```
-
-## Integration Points
-
-### CI/CD Integration
-
-- **GitHub Actions**: Native hadolint-action with SARIF support for Security tab
-- **GitLab CI**: GitLab Code Quality format integration
-- **Jenkins**: Checkstyle format for Jenkins Warnings plugin
-- **CircleCI**: Docker-based executor with artifact retention
-- **Azure Pipelines**: Task integration with results publishing
-
-### Security Tools Ecosystem
-
-- **Image Scanning**: Combine with Trivy, Grype, Clair for runtime vulnerability scanning
-- **Secret Scanning**: Integrate with Gitleaks, TruffleHog for comprehensive secret detection
-- **IaC Security**: Chain with Checkov for Kubernetes/Terraform validation
-- **SBOM Generation**: Export findings alongside Syft/Trivy SBOM reports
-- **Security Dashboards**: Export JSON to Grafana, Kibana, Datadog for centralized monitoring
-
-### SDLC Integration
-
-- **Development**: Pre-commit hooks provide immediate feedback
-- **Code Review**: PR checks prevent insecure Dockerfiles from merging
-- **Testing**: Scan test environment Dockerfiles
-- **Staging**: Validation gate before production promotion
-- **Production**: Periodic audits of deployed container configurations
-
 ## Troubleshooting
 
 ### Issue: Too Many False Positives
@@ -529,65 +485,6 @@ else
   hadolint --failure-threshold error Dockerfile
 fi
 ```
-
-## Advanced Configuration
-
-### Custom Rule Severity Override
-
-```yaml
-# .hadolint.yaml
-override:
-  error:
-    - DL3001  # Package versioning is critical
-    - DL3020  # COPY vs ADD is security-critical
-  warning:
-    - DL3059  # Multiple RUN is warning, not info
-  info:
-    - DL3008  # Downgrade apt-get pinning to info for dev images
-```
-
-### Inline Suppression
-
-```dockerfile
-# Suppress single rule for one instruction
-# hadolint ignore=DL3018
-RUN apk add --no-cache curl
-
-# Suppress multiple rules
-# hadolint ignore=DL3003,DL3009
-WORKDIR /tmp
-RUN apt-get update && apt-get install -y wget
-
-# Global suppression (use sparingly)
-# hadolint global ignore=DL3059
-```
-
-### Trusted Registry Enforcement
-
-```yaml
-# .hadolint.yaml
-trustedRegistries:
-  - docker.io/library      # Official images only
-  - gcr.io/distroless      # Google distroless
-  - cgr.dev/chainguard     # Chainguard images
-
-# This will error on:
-# FROM nginx:latest                    ❌ (docker.io/nginx)
-# FROM docker.io/library/nginx:latest  ✅ (trusted)
-```
-
-### Label Schema Validation
-
-```yaml
-# .hadolint.yaml
-label-schema:
-  maintainer: text
-  org.opencontainers.image.created: rfc3339
-  org.opencontainers.image.version: semver
-  org.opencontainers.image.vendor: text
-```
-
-Ensures Dockerfile LABELs conform to OCI image specification.
 
 ## References
 

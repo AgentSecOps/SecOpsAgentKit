@@ -146,45 +146,20 @@ For CI/CD integration patterns, see `scripts/nuclei_ci.sh`.
 
 ### Step 3: Execute Targeted Scans
 
-Run scans based on security objectives:
-
-**Critical Vulnerability Scan:**
 ```bash
-# Focus on critical and high severity issues
-nuclei -u https://target-app.com \
-  -severity critical,high \
-  -tags cve,owasp \
-  -o critical-findings.txt \
-  -json -jsonl-export critical-findings.jsonl
-```
+# Critical and high severity scan
+nuclei -u https://target-app.com -severity critical,high -tags cve,owasp \
+  -o critical-findings.txt -json -jsonl-export critical-findings.jsonl
 
-**Technology-Specific Scan:**
-```bash
-# Scan specific technology stack
+# Technology-specific scan
 nuclei -u https://target-app.com -tags apache,nginx,wordpress,drupal
 
-# Scan for exposed sensitive files
-nuclei -u https://target-app.com -tags exposure,config
-
-# Scan for authentication issues
-nuclei -u https://target-app.com -tags auth,login,default-logins
-```
-
-**API Security Scan:**
-```bash
 # API-focused security testing
-nuclei -u https://api.target.com \
-  -tags api,graphql,swagger \
-  -severity critical,high,medium \
-  -header "Authorization: Bearer $API_TOKEN"
-```
+nuclei -u https://api.target.com -tags api,graphql,swagger \
+  -severity critical,high,medium -header "Authorization: Bearer $API_TOKEN"
 
-**Custom Template Scan:**
-```bash
-# Scan with organization-specific templates
-nuclei -u https://target-app.com \
-  -t custom-templates/ \
-  -t nuclei-templates/http/cves/ \
+# Custom template scan
+nuclei -u https://target-app.com -t custom-templates/ -t nuclei-templates/http/cves/ \
   -severity critical,high
 ```
 
@@ -212,130 +187,64 @@ For OAuth, SAML, and MFA scenarios, see `references/authentication_patterns.md`.
 
 ### Step 5: Results Analysis and Validation
 
-Review findings and eliminate false positives:
-
 ```bash
 # Parse JSON output for high-level summary
-python3 scripts/parse_nuclei_results.py \
-  --input critical-findings.jsonl \
-  --output report.html \
-  --group-by severity
+python3 scripts/parse_nuclei_results.py --input critical-findings.jsonl --output report.html --group-by severity
 
-# Filter and verify findings
-nuclei -u https://target-app.com \
-  -tags cve \
-  -severity critical \
-  -verify \
-  -verbose
+# Verify findings to reduce false positives
+nuclei -u https://target-app.com -tags cve -severity critical -verify -verbose
 ```
 
 **Validation Workflow:**
-1. Review critical findings first (immediate action required)
-2. Verify each finding manually (curl, browser inspection, PoC testing)
-3. Check for false positives using `references/false_positive_guide.md`
-4. Map confirmed vulnerabilities to OWASP Top 10 using `references/owasp_mapping.md`
-5. Cross-reference with CWE classifications for remediation patterns
-
-**Feedback Loop Pattern:**
-```bash
-# 1. Initial scan
-nuclei -u https://target-app.com -severity critical,high -o scan1.txt
-
-# 2. Apply fixes to identified vulnerabilities
-
-# 3. Re-scan to verify remediation
-nuclei -u https://target-app.com -severity critical,high -o scan2.txt
-
-# 4. Compare results to ensure vulnerabilities are resolved
-diff scan1.txt scan2.txt
-```
+1. Review critical findings first; verify manually with curl/browser inspection
+2. Check for false positives using `references/false_positive_guide.md`
+3. Map confirmed vulnerabilities to OWASP Top 10 via `references/owasp_mapping.md`
+4. Re-scan after fixes: `diff scan1.txt scan2.txt`
 
 ### Step 6: Reporting and Remediation Tracking
 
-Generate comprehensive security reports:
-
 ```bash
 # Generate detailed report with OWASP/CWE mappings
-python3 scripts/nuclei_report_generator.py \
-  --input scan-results.jsonl \
-  --output security-report.html \
-  --format html \
-  --include-remediation \
-  --map-frameworks owasp,cwe
+python3 scripts/nuclei_report_generator.py --input scan-results.jsonl --output security-report.html \
+  --format html --include-remediation --map-frameworks owasp,cwe
 
 # Export to SARIF for GitHub Security tab
-nuclei -u https://target-app.com \
-  -severity critical,high \
-  -sarif-export github-sarif.json
+nuclei -u https://target-app.com -severity critical,high -sarif-export github-sarif.json
 ```
 
 See `assets/report_templates/` for customizable report formats.
 
 ## Automation & CI/CD Integration
 
-### GitHub Actions Integration
-
 ```yaml
-# .github/workflows/nuclei-scan.yml
+# GitHub Actions
 name: Nuclei Security Scan
 on: [push, pull_request]
-
 jobs:
   nuclei:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Nuclei Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://staging.target-app.com
           severity: critical,high
           templates: cves,owasp,misconfig
-
       - name: Upload Results
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: nuclei.sarif
 ```
 
-### Docker-Based CI/CD Scanning
-
 ```bash
-# Run in CI/CD pipeline with Docker
-docker run --rm \
-  -v $(pwd):/reports \
-  projectdiscovery/nuclei:latest \
-  -u $TARGET_URL \
-  -severity critical,high \
-  -json -jsonl-export /reports/nuclei-results.jsonl
+# Docker-based CI/CD
+docker run --rm -v $(pwd):/reports projectdiscovery/nuclei:latest \
+  -u $TARGET_URL -severity critical,high -json -jsonl-export /reports/nuclei-results.jsonl
 
-# Check exit code and fail build on critical findings
-if grep -q '"severity":"critical"' nuclei-results.jsonl; then
-  echo "Critical vulnerabilities detected!"
-  exit 1
-fi
+# Fail build on critical findings
+grep -q '"severity":"critical"' nuclei-results.jsonl && { echo "Critical vulnerabilities!"; exit 1; }
 ```
-
-### Advanced Automation with Custom Scripts
-
-```bash
-# Automated multi-target scanning with parallel execution
-./scripts/nuclei_bulk_scanner.sh \
-  --targets-file production-apps.txt \
-  --severity critical,high \
-  --slack-webhook $SLACK_WEBHOOK \
-  --output-dir scan-reports/
-
-# Scheduled vulnerability monitoring
-./scripts/nuclei_scheduler.sh \
-  --schedule daily \
-  --targets targets.txt \
-  --diff-mode \
-  --alert-on new-findings
-```
-
-For complete CI/CD integration examples, see `scripts/ci_integration_examples/`.
 
 ## Custom Template Development
 
@@ -421,75 +330,25 @@ http:
 
 ### Pattern 1: Progressive Severity Scanning
 
-Start with critical vulnerabilities and progressively expand scope:
-
 ```bash
-# Stage 1: Critical vulnerabilities only (fast)
+# Stage 1: Critical only (fast); Stage 2: expand to high; Stage 3: full assessment
 nuclei -u https://target-app.com -severity critical -o critical.txt
-
-# Stage 2: High severity if critical issues found
-if [ -s critical.txt ]; then
-  nuclei -u https://target-app.com -severity high -o high.txt
-fi
-
-# Stage 3: Medium/Low for comprehensive assessment
+[ -s critical.txt ] && nuclei -u https://target-app.com -severity high -o high.txt
 nuclei -u https://target-app.com -severity medium,low -o all-findings.txt
 ```
 
-### Pattern 2: Technology-Specific Scanning
-
-Focus on known technology stack vulnerabilities:
+### Pattern 2: Multi-Stage API Security Testing
 
 ```bash
-# 1. Identify technologies
-nuclei -u https://target-app.com -tags tech -o tech-detected.txt
-
-# 2. Parse detected technologies
-TECHS=$(grep -oP 'matched at \K\w+' tech-detected.txt | sort -u)
-
-# 3. Scan for technology-specific vulnerabilities
-for tech in $TECHS; do
-  nuclei -u https://target-app.com -tags $tech -severity critical,high -o vulns-$tech.txt
-done
-```
-
-### Pattern 3: Multi-Stage API Security Testing
-
-Comprehensive API security assessment:
-
-```bash
-# Stage 1: API discovery and fingerprinting
 nuclei -u https://api.target.com -tags api,swagger,graphql -o api-discovery.txt
-
-# Stage 2: Authentication testing
 nuclei -u https://api.target.com -tags auth,jwt,oauth -o api-auth.txt
-
-# Stage 3: Known API CVEs
 nuclei -u https://api.target.com -tags api,cve -severity critical,high -o api-cves.txt
-
-# Stage 4: Business logic testing with custom templates
-nuclei -u https://api.target.com -t custom-templates/api/ -o api-custom.txt
-```
-
-### Pattern 4: Continuous Security Monitoring
-
-```bash
-# Daily scan with diff detection
-nuclei -u https://production-app.com \
-  -severity critical,high -tags cve \
-  -json -jsonl-export scan-$(date +%Y%m%d).jsonl
-
-# Use bundled scripts for diff analysis and alerting
 ```
 
 ## Integration Points
 
-- **CI/CD**: GitHub Actions, GitLab CI, Jenkins, CircleCI, Azure DevOps, Travis CI
-- **Issue Tracking**: Jira, GitHub Issues, ServiceNow, Linear (via SARIF or custom scripts)
-- **Security Platforms**: Defect Dojo, Splunk, ELK Stack, SIEM platforms (via JSON export)
-- **Notification**: Slack, Microsoft Teams, Discord, PagerDuty, email (via webhook scripts)
-- **SDLC**: Pre-deployment scanning, security regression testing, vulnerability monitoring
-- **Cloud Platforms**: AWS Lambda, Google Cloud Functions, Azure Functions (serverless scanning)
+- **CI/CD**: GitHub Actions, GitLab CI, Jenkins, CircleCI, Azure DevOps
+- **Security Platforms**: Defect Dojo, Splunk, ELK Stack (via JSON export)
 - **Reporting**: HTML, JSON, JSONL, SARIF, Markdown, CSV formats
 
 ## Troubleshooting

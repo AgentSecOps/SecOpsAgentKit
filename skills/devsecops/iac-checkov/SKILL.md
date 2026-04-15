@@ -300,167 +300,15 @@ pre-commit install
 ### GitLab CI
 
 ```yaml
-# .gitlab-ci.yml
 checkov_scan:
   image: bridgecrew/checkov:latest
   stage: security
   script:
-    - checkov -d ./terraform -o json -o junitxml
-      --output-file-path $CI_PROJECT_DIR/checkov-report
+    - checkov -d ./terraform -o json -o junitxml --output-file-path $CI_PROJECT_DIR/checkov-report
   artifacts:
     reports:
       junit: checkov-report/results_junitxml.xml
-    paths:
-      - checkov-report/
     when: always
-```
-
-### Jenkins Pipeline
-
-```groovy
-// Jenkinsfile
-pipeline {
-    agent any
-    stages {
-        stage('Checkov Scan') {
-            steps {
-                sh 'pip install checkov'
-                sh '''
-                    checkov -d ./terraform \
-                      -o cli -o junitxml \
-                      --output-file-path ./reports
-                '''
-            }
-        }
-    }
-    post {
-        always {
-            junit 'reports/results_junitxml.xml'
-        }
-    }
-}
-```
-
-See `assets/` directory for complete CI/CD templates.
-
-## Framework-Specific Workflows
-
-### Terraform
-
-**Scan Terraform with Variable Files:**
-
-```bash
-# Scan with tfvars
-checkov -d ./terraform --var-file ./terraform.tfvars
-
-# Download and scan external modules
-checkov -d ./terraform --download-external-modules true
-
-# Skip Terraform plan files
-checkov -d ./terraform --skip-path terraform.tfstate
-```
-
-**Common Terraform Checks:**
-- CKV_AWS_19: Ensure S3 bucket has server-side encryption
-- CKV_AWS_21: Ensure S3 bucket has versioning enabled
-- CKV_AWS_23: Ensure Security Group ingress is not open to 0.0.0.0/0
-- CKV_AWS_40: Ensure IAM policies don't use wildcard actions
-- CKV_AWS_61: Ensure RDS database has encryption at rest enabled
-
-### Kubernetes
-
-**Scan Kubernetes Manifests:**
-
-```bash
-# Scan all YAML manifests
-checkov -d ./k8s --framework kubernetes
-
-# Scan Helm chart
-checkov -d ./helm-chart --framework helm
-
-# Scan kustomize output
-kustomize build ./overlay/prod | checkov -f - --framework kubernetes
-```
-
-**Common Kubernetes Checks:**
-- CKV_K8S_8: Ensure Liveness Probe is configured
-- CKV_K8S_10: Ensure CPU requests are set
-- CKV_K8S_11: Ensure CPU limits are set
-- CKV_K8S_14: Ensure container image is not latest
-- CKV_K8S_16: Ensure container is not privileged
-- CKV_K8S_22: Ensure read-only root filesystem
-- CKV_K8S_28: Ensure container capabilities are minimized
-
-### CloudFormation
-
-**Scan CloudFormation Templates:**
-
-```bash
-# Scan CloudFormation template
-checkov -f ./cloudformation/stack.yaml --framework cloudformation
-
-# Scan AWS SAM template
-checkov -f ./sam-template.yaml --framework serverless
-```
-
-### Dockerfile
-
-**Scan Dockerfiles for Security Issues:**
-
-```bash
-# Scan Dockerfile
-checkov -f ./Dockerfile --framework dockerfile
-
-# Common issues detected:
-# - Running as root user
-# - Using :latest tag
-# - Missing HEALTHCHECK
-# - Exposing sensitive ports
-```
-
-## Baseline and Drift Detection
-
-### Create Security Baseline
-
-Establish baseline for existing infrastructure:
-
-```bash
-# Create baseline (first scan)
-checkov -d ./terraform --create-baseline
-
-# This creates .checkov.baseline file with current findings
-```
-
-### Detect New Issues (Drift)
-
-Compare subsequent scans against baseline:
-
-```bash
-# Compare against baseline - only fail on NEW issues
-checkov -d ./terraform --baseline .checkov.baseline
-
-# This allows existing issues while preventing new ones
-```
-
-**Use Cases:**
-- Gradual remediation of legacy infrastructure
-- Focus on preventing new security debt
-- Phased compliance adoption
-
-## Secret Scanning
-
-Detect hardcoded secrets in IaC:
-
-```bash
-# Enable secrets scanning
-checkov -d ./terraform --framework secrets
-
-# Common secrets detected:
-# - AWS access keys
-# - API tokens
-# - Private keys
-# - Database passwords
-# - Generic secrets (high entropy strings)
 ```
 
 ## Security Considerations
@@ -626,39 +474,6 @@ checkov -d ./terraform \
 
 # Use compact output
 checkov -d ./terraform --compact --quiet
-```
-
-### Issue: Custom Policies Not Loading
-
-**Solution**: Verify policy structure and loading:
-
-```bash
-# Check policy syntax
-python3 custom_checks/my_policy.py
-
-# Ensure proper directory structure
-checkov -d ./terraform \
-  --external-checks-dir ./custom_checks \
-  --list
-
-# Debug with verbose output
-checkov -d ./terraform --external-checks-dir ./custom_checks -v
-```
-
-### Issue: Integration with Private Terraform Modules
-
-**Solution**: Configure module access:
-
-```bash
-# Set up Terraform credentials
-export TF_TOKEN_app_terraform_io="your-token"
-
-# Download external modules
-checkov -d ./terraform --download-external-modules true
-
-# Or scan after terraform init
-cd ./terraform && terraform init
-checkov -d .
 ```
 
 ## References

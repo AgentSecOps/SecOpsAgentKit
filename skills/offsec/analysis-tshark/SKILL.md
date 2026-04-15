@@ -77,92 +77,33 @@ Work through each step systematically. Check off completed items.
 
 ### 2. Interface Discovery
 
-Identify available network interfaces:
-
 ```bash
-# List all interfaces
-tshark -D
-
-# List with interface details
-sudo tshark -D
-
-# Capture on specific interface
-sudo tshark -i eth0
-sudo tshark -i wlan0
-
-# Capture on any interface
-sudo tshark -i any
-
-# Capture on multiple interfaces
-sudo tshark -i eth0 -i wlan0
+sudo tshark -D          # List all interfaces
+sudo tshark -i eth0     # Capture on specific interface
+sudo tshark -i any      # Capture on all interfaces (Linux)
 ```
-
-**Interface types**:
-- **eth0/ens33**: Ethernet interface
-- **wlan0**: Wireless interface
-- **lo**: Loopback interface
-- **any**: All interfaces (Linux only)
-- **mon0**: Monitor mode interface (wireless)
 
 ### 3. Basic Packet Capture
 
-Capture network traffic:
-
 ```bash
-# Capture indefinitely (Ctrl+C to stop)
-sudo tshark -i eth0
-
-# Capture specific number of packets
-sudo tshark -i eth0 -c 1000
-
-# Capture for specific duration (seconds)
-sudo tshark -i eth0 -a duration:60
-
-# Capture to file
-sudo tshark -i eth0 -w capture.pcap
-
-# Capture with ring buffer (rotate files)
-sudo tshark -i eth0 -w capture.pcap -b filesize:100000 -b files:5
+sudo tshark -i eth0 -c 1000                          # Capture 1000 packets
+sudo tshark -i eth0 -a duration:60                   # Capture for 60 seconds
+sudo tshark -i eth0 -w capture.pcap                  # Save to file
+sudo tshark -i eth0 -w capture.pcap -b filesize:100000 -b files:5  # Ring buffer
 ```
-
-**Capture options**:
-- `-c <count>`: Capture packet count
-- `-a duration:<sec>`: Auto-stop after duration
-- `-w <file>`: Write to file
-- `-b filesize:<KB>`: Rotate at file size
-- `-b files:<num>`: Keep N ring buffer files
 
 ### 4. Capture Filters
 
 Apply BPF (Berkeley Packet Filter) during capture for efficiency:
 
 ```bash
-# Capture only HTTP traffic
-sudo tshark -i eth0 -f "tcp port 80"
-
-# Capture specific host
-sudo tshark -i eth0 -f "host 192.168.1.100"
-
-# Capture subnet
-sudo tshark -i eth0 -f "net 192.168.1.0/24"
-
-# Capture multiple ports
-sudo tshark -i eth0 -f "tcp port 80 or tcp port 443"
-
-# Exclude specific traffic
-sudo tshark -i eth0 -f "not port 22"
-
-# Capture SYN packets only
-sudo tshark -i eth0 -f "tcp[tcpflags] & tcp-syn != 0"
+sudo tshark -i eth0 -f "tcp port 80"                          # HTTP only
+sudo tshark -i eth0 -f "host 192.168.1.100"                   # Specific host
+sudo tshark -i eth0 -f "net 192.168.1.0/24"                   # Subnet
+sudo tshark -i eth0 -f "tcp port 80 or tcp port 443"          # Multiple ports
+sudo tshark -i eth0 -f "not port 22"                          # Exclude traffic
+sudo tshark -i eth0 -f "tcp[tcpflags] & tcp-syn != 0"         # SYN packets
 ```
-
-**Common capture filters**:
-- `host <ip>`: Traffic to/from IP
-- `net <cidr>`: Traffic to/from network
-- `port <port>`: Specific port
-- `tcp|udp|icmp`: Protocol type
-- `src|dst`: Direction filter
-- `and|or|not`: Logical operators
 
 ### 5. Display Filters
 
@@ -209,67 +150,29 @@ tshark -r capture.pcap -Y "http" -T fields -e frame.time_relative -e ip.dst
 
 ### 6. Protocol Analysis
 
-Analyze specific protocols:
-
-**HTTP/HTTPS Analysis**:
-
+**HTTP/HTTPS**:
 ```bash
-# Extract HTTP requests
 tshark -r capture.pcap -Y "http.request" -T fields -e ip.src -e http.host -e http.request.uri
-
-# Extract HTTP User-Agents
-tshark -r capture.pcap -Y "http.user_agent" -T fields -e ip.src -e http.user_agent
-
-# HTTP status codes
 tshark -r capture.pcap -Y "http.response" -T fields -e ip.src -e http.response.code
-
-# Extract HTTP cookies
 tshark -r capture.pcap -Y "http.cookie" -T fields -e ip.src -e http.cookie
 ```
 
-**DNS Analysis**:
-
+**DNS**:
 ```bash
-# DNS queries
 tshark -r capture.pcap -Y "dns.flags.response == 0" -T fields -e ip.src -e dns.qry.name
-
-# DNS responses
-tshark -r capture.pcap -Y "dns.flags.response == 1" -T fields -e dns.qry.name -e dns.a
-
-# DNS tunneling detection (long domain names)
-tshark -r capture.pcap -Y "dns" -T fields -e dns.qry.name | awk 'length > 50'
-
-# DNS query types
-tshark -r capture.pcap -Y "dns" -T fields -e dns.qry.type -e dns.qry.name
+tshark -r capture.pcap -Y "dns" -T fields -e dns.qry.name | awk 'length > 50'  # Tunneling detection
 ```
 
-**TLS/SSL Analysis**:
-
+**TLS/SSL**:
 ```bash
-# TLS handshakes
 tshark -r capture.pcap -Y "tls.handshake.type == 1" -T fields -e ip.src -e ip.dst -e tls.handshake.extensions_server_name
-
-# TLS certificates
-tshark -r capture.pcap -Y "tls.handshake.certificate" -T fields -e tls.handshake.certificate
-
-# SSL/TLS versions
-tshark -r capture.pcap -Y "tls" -T fields -e tls.record.version
-
-# Weak cipher suites
 tshark -r capture.pcap -Y "tls.handshake.ciphersuite" -T fields -e tls.handshake.ciphersuite
 ```
 
-**SMB/CIFS Analysis**:
-
+**SMB/CIFS**:
 ```bash
-# SMB file access
 tshark -r capture.pcap -Y "smb2" -T fields -e ip.src -e smb2.filename
-
-# SMB authentication
 tshark -r capture.pcap -Y "ntlmssp" -T fields -e ip.src -e ntlmssp.auth.username
-
-# SMB commands
-tshark -r capture.pcap -Y "smb2" -T fields -e smb2.cmd
 ```
 
 ### 7. Credential Extraction
@@ -500,59 +403,6 @@ tshark -r capture.pcap -Y "http.content_type contains \"application/\" or ftp-da
 
 # Geolocation of connections (requires GeoIP)
 tshark -r capture.pcap -T fields -e ip.src -e ip.dst -e ip.geoip.src_country -e ip.geoip.dst_country
-```
-
-### Pattern 5: Wireless Security Assessment
-
-```bash
-# Capture wireless traffic (monitor mode required)
-sudo tshark -i mon0 -w wireless_capture.pcap
-
-# Identify wireless networks
-tshark -r wireless_capture.pcap -Y "wlan.fc.type_subtype == 0x08" -T fields -e wlan.ssid -e wlan.bssid
-
-# Detect deauth attacks
-tshark -r wireless_capture.pcap -Y "wlan.fc.type_subtype == 0x0c"
-
-# WPA handshake capture
-tshark -r wireless_capture.pcap -Y "eapol"
-
-# Client probing activity
-tshark -r wireless_capture.pcap -Y "wlan.fc.type_subtype == 0x04" -T fields -e wlan.sa -e wlan.ssid
-```
-
-## Integration Points
-
-### SIEM Integration
-
-Export packet analysis to SIEM platforms:
-
-```bash
-# Export to JSON for Splunk/ELK
-tshark -r capture.pcap -T ek > packets.json
-
-# Export specific fields in JSON
-tshark -r capture.pcap -Y "http" -T json -e ip.src -e ip.dst -e http.host -e http.request.uri
-
-# CSV export for analysis
-tshark -r capture.pcap -T fields -E separator=, -e frame.time -e ip.src -e ip.dst -e tcp.dstport > packets.csv
-```
-
-### Scripting and Automation
-
-```bash
-#!/bin/bash
-# continuous_monitor.sh - Continuous network monitoring
-
-INTERFACE="eth0"
-ALERT_FILTER="http contains \"cmd.exe\" or dns.qry.name contains \".tk\" or dns.qry.name contains \".xyz\""
-
-sudo tshark -i $INTERFACE -Y "$ALERT_FILTER" -T fields -e frame.time -e ip.src -e ip.dst -e http.host -e dns.qry.name | \
-while read line; do
-  echo "[ALERT] $(date): $line" | tee -a security_alerts.log
-  # Trigger incident response workflow
-  echo "$line" | mail -s "Security Alert" soc@company.com
-done
 ```
 
 ## Troubleshooting

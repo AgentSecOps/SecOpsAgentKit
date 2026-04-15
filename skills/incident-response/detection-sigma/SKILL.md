@@ -492,14 +492,8 @@ For detailed technique mappings, see [references/mitre-attack-mapping.md](refere
 3. **Test Before Deploy**: Validate against historical data in test environment
 4. **Document Tuning**: Track false positive patterns and tuning decisions
 5. **Map to Frameworks**: Tag all rules with MITRE ATT&CK and compliance mappings
-6. **Automate Validation**: Use CI/CD to validate rules on every change
-7. **Monitor Effectiveness**: Track rule trigger rates and true positive rates
-8. **Regular Updates**: Review and update rules based on new threat intelligence
 
 ## References
 
 - [Sigma Specification](https://github.com/SigmaHQ/sigma-specification)
-- [SigmaHQ Rule Repository](https://github.com/SigmaHQ/sigma/tree/master/rules)
-- [pySigma Documentation](https://github.com/SigmaHQ/pySigma)
-- [Sigma Converter Web Tool](https://sigconverter.io/)
 - [MITRE ATT&CK Framework](https://attack.mitre.org/)
