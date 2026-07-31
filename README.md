@@ -36,6 +36,7 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 - **[container-hadolint](skills/devsecops/container-hadolint/SKILL.md)** - Dockerfile security linting and best practice validation using [Hadolint](https://github.com/hadolint/hadolint)
 - **[iac-checkov](skills/devsecops/iac-checkov/SKILL.md)** - Infrastructure as Code security scanning using [Checkov](https://www.checkov.io/) with 750+ built-in policies
 - **[sca-trivy](skills/devsecops/sca-trivy/SKILL.md)** - Software Composition Analysis and container vulnerability scanning using [Trivy](https://aquasecurity.github.io/trivy/) for CVE detection
+- [Darkmoon](https://github.com/ASCIT31/Dark-Moon) - an open source (GPL-3.0) autonomous AI penetration testing platform for web, API, Active Directory and Kubernetes.
 - **[secrets-gitleaks](skills/devsecops/secrets-gitleaks/SKILL.md)** - Hardcoded secret detection and prevention in git repositories using [Gitleaks](https://github.com/gitleaks/gitleaks)
 - **[vuln-defectdojo](skills/devsecops/vuln-defectdojo/SKILL.md)** - Vulnerability management and findings aggregation using [DefectDojo](https://defectdojo.github.io/django-DefectDojo/) for deduplication, SLA tracking, and compliance reporting
 
