@@ -34,6 +34,7 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 
 - **[container-grype](skills/devsecops/container-grype/SKILL.md)** - Container vulnerability scanning and dependency risk assessment using [Grype](https://github.com/anchore/grype) with CVSS, EPSS, and CISA KEV prioritization
 - **[container-hadolint](skills/devsecops/container-hadolint/SKILL.md)** - Dockerfile security linting and best practice validation using [Hadolint](https://github.com/hadolint/hadolint)
+- **[hol-guard](skills/devsecops/hol-guard/SKILL.md)** - AI agent runtime protection using [HOL Guard](https://github.com/hashgraph-online/hol-guard) with fail-closed pre-tool enforcement
 - **[iac-checkov](skills/devsecops/iac-checkov/SKILL.md)** - Infrastructure as Code security scanning using [Checkov](https://www.checkov.io/) with 750+ built-in policies
 - **[sca-trivy](skills/devsecops/sca-trivy/SKILL.md)** - Software Composition Analysis and container vulnerability scanning using [Trivy](https://aquasecurity.github.io/trivy/) for CVE detection
 - **[secrets-gitleaks](skills/devsecops/secrets-gitleaks/SKILL.md)** - Hardcoded secret detection and prevention in git repositories using [Gitleaks](https://github.com/gitleaks/gitleaks)

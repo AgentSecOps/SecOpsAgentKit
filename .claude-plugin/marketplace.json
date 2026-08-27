@@ -32,6 +32,7 @@
       "strict": false,
       "skills": [
         "./devsecops/secrets-gitleaks",
+        "./devsecops/hol-guard",
         "./devsecops/iac-checkov",
         "./devsecops/container-grype",
         "./devsecops/container-hadolint",

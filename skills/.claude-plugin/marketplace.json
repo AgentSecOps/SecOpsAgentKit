@@ -20,6 +20,7 @@
       "skills": [
         "./devsecops/container-grype",
         "./devsecops/container-hadolint",
+        "./devsecops/hol-guard",
         "./devsecops/iac-checkov",
         "./devsecops/sca-trivy",
         "./devsecops/secrets-gitleaks",
