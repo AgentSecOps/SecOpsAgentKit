@@ -38,14 +38,14 @@ Probe the real CLI first:
 hol-guard --version
 ```
 
-If it is unavailable and the user asked to install Guard, prefer an isolated stable install:
+If it is unavailable and the user asked to install Guard, prefer the isolated pinned stable install used by this contribution:
 
 ```bash
-pipx install --force "hol-guard==3.0.11"
+pipx install --force "hol-guard==3.0.12"
 hol-guard --version
 ```
 
-If `pipx` is unavailable, report that isolated CLI installation is recommended instead of silently modifying the active Python environment.
+Do not silently replace this pin with `latest`, a prerelease, or a branch URL. If `pipx` is unavailable, report that isolated CLI installation is recommended instead of silently modifying the active Python environment.
 
 ## Protect the detected harness
 
