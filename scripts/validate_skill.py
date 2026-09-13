@@ -38,6 +38,12 @@ FORBIDDEN_FILES = {"README.md", "CHANGELOG.md", "INSTALLATION.md"}
 PLACEHOLDERS = ["TODO", "FIXME", "your-github-username"]
 KEBAB_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
+# The validator resolves local references/ paths wherever they appear in
+# SKILL.md (Markdown links, inline code, or prose). External URLs and in-page
+# anchors are ignored by the boundary checks.
+REFERENCE_PATH_RE = re.compile(
+    r"(?<![\w./#-])(?:\./)?references/[A-Za-z0-9._-][A-Za-z0-9._/-]*"
+)
 MAX_SKILL_LINES = 750
 MIN_DESCRIPTION_LEN = 100
 
@@ -195,6 +201,40 @@ def check_reference_linkage(skill_dir: Path, skill_md: Path) -> list[CheckResult
     return [_pass("reference_linkage", "All reference files linked in SKILL.md")]
 
 
+def check_reference_targets(skill_dir: Path, skill_md: Path) -> list[CheckResult]:
+    """Ensure local references/ paths in SKILL.md resolve to files."""
+    skill_text = skill_md.read_text(encoding="utf-8")
+    skill_root = skill_dir.resolve()
+    missing: set[str] = set()
+
+    for target in REFERENCE_PATH_RE.findall(skill_text):
+        target = target.strip()
+        target = target.replace("\\", "/")
+        if target.startswith("./"):
+            target = target[2:]
+        if not target.startswith("references/"):
+            continue
+
+        # A fragment identifies a section in the referenced file and does not
+        # change which file must exist.
+        target_path = target.split("#", 1)[0]
+        if not target_path:
+            continue
+
+        candidate = (skill_dir / target_path).resolve()
+        try:
+            candidate.relative_to(skill_root)
+        except ValueError:
+            missing.add(f"{target_path} (outside skill directory)")
+            continue
+        if not candidate.is_file():
+            missing.add(target_path)
+
+    if missing:
+        return [_fail("reference_targets", f"Missing reference targets: {', '.join(sorted(missing))}")]
+    return [_pass("reference_targets", "All linked reference files exist")]
+
+
 def check_marketplace(skill_dir: Path) -> list[CheckResult]:
     if not MARKETPLACE_PATH.exists():
         return [_fail("marketplace_registered", f"marketplace.json not found at {MARKETPLACE_PATH}")]
@@ -250,6 +290,7 @@ def validate_skill(skill_dir: Path) -> tuple[list[CheckResult], bool]:
     results.extend(check_forbidden_files(skill_dir))
     results.extend(check_scripts_executable(skill_dir))
     results.extend(check_reference_linkage(skill_dir, skill_md))
+    results.extend(check_reference_targets(skill_dir, skill_md))
     results.extend(check_marketplace(skill_dir))
 
     passed = all(r.passed for r in results)
