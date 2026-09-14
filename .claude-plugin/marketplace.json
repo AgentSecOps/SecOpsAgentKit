@@ -15,14 +15,14 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./appsec/sast-semgrep",
-        "./appsec/sast-bandit",
-        "./appsec/dast-zap",
-        "./appsec/dast-nuclei",
-        "./appsec/api-mitmproxy",
-        "./appsec/api-spectral",
-        "./appsec/dast-ffuf",
-        "./appsec/sca-blackduck"
+        "./skills/appsec/sast-semgrep",
+        "./skills/appsec/sast-bandit",
+        "./skills/appsec/dast-zap",
+        "./skills/appsec/dast-nuclei",
+        "./skills/appsec/api-mitmproxy",
+        "./skills/appsec/api-spectral",
+        "./skills/appsec/dast-ffuf",
+        "./skills/appsec/sca-blackduck"
       ]
     },
     {
@@ -31,12 +31,12 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./devsecops/secrets-gitleaks",
-        "./devsecops/iac-checkov",
-        "./devsecops/container-grype",
-        "./devsecops/container-hadolint",
-        "./devsecops/sca-trivy",
-        "./devsecops/vuln-defectdojo"
+        "./skills/devsecops/secrets-gitleaks",
+        "./skills/devsecops/iac-checkov",
+        "./skills/devsecops/container-grype",
+        "./skills/devsecops/container-hadolint",
+        "./skills/devsecops/sca-trivy",
+        "./skills/devsecops/vuln-defectdojo"
       ]
     },
     {
@@ -45,9 +45,9 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./secsdlc/reviewdog",
-        "./secsdlc/sast-horusec",
-        "./secsdlc/sbom-syft"
+        "./skills/secsdlc/reviewdog",
+        "./skills/secsdlc/sast-horusec",
+        "./skills/secsdlc/sbom-syft"
       ]
     },
     {
@@ -56,7 +56,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./compliance/policy-opa"
+        "./skills/compliance/policy-opa"
       ]
     },
     {
@@ -65,9 +65,9 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./incident-response/detection-sigma",
-        "./incident-response/forensics-osquery",
-        "./incident-response/ir-velociraptor"
+        "./skills/incident-response/detection-sigma",
+        "./skills/incident-response/forensics-osquery",
+        "./skills/incident-response/ir-velociraptor"
       ]
     },
     {
@@ -76,7 +76,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./threatmodel/pytm"
+        "./skills/threatmodel/pytm"
       ]
     },
     {
@@ -85,15 +85,15 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./offsec/pentest-metasploit",
-        "./offsec/recon-nmap",
-        "./offsec/network-netcat",
-        "./offsec/ot-security-assessment",
-        "./offsec/analysis-tshark",
-        "./offsec/webapp-sqlmap",
-        "./offsec/webapp-nikto",
-        "./offsec/crack-hashcat",
-        "./offsec/privesc-linpeas"
+        "./skills/offsec/pentest-metasploit",
+        "./skills/offsec/recon-nmap",
+        "./skills/offsec/network-netcat",
+        "./skills/offsec/ot-security-assessment",
+        "./skills/offsec/analysis-tshark",
+        "./skills/offsec/webapp-sqlmap",
+        "./skills/offsec/webapp-nikto",
+        "./skills/offsec/crack-hashcat",
+        "./skills/offsec/privesc-linpeas"
       ]
     }
   ]
