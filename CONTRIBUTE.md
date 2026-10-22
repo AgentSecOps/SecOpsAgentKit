@@ -760,7 +760,7 @@ If you need to rename an existing skill, follow these steps to ensure all refere
 
 4. **Update marketplace.json**:
    - Locate the skill path in `.claude-plugin/marketplace.json`
-   - Change `./<category>/<old-name>` to `./<category>/<new-name>`
+   - Change `./skills/<category>/<old-name>` to `./skills/<category>/<new-name>`
    - Maintain alphabetical ordering within the plugin's skills array
 
 5. **Validate the renamed skill**:
@@ -777,7 +777,7 @@ mv skills/devsecops/sca-grype skills/devsecops/container-grype
 
 # Update SKILL.md frontmatter: name: container-grype
 # Update README.md: [container-grype](skills/devsecops/container-grype/SKILL.md)
-# Update marketplace.json: "./devsecops/container-grype"
+# Update marketplace.json: "./skills/devsecops/container-grype"
 
 python3 ./scripts/validate_skill.py skills/devsecops/container-grype
 ```
