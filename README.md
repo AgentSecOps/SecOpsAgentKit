@@ -16,6 +16,12 @@ SecOpsAgentKit provides specialized Claude Code skills for security operations, 
 /plugin marketplace add https://github.com/AgentSecOps/SecOpsAgentKit.git
 ```
 
+If `claude plugin list` shows these plugins as `failed to load`, refresh the marketplace, update each plugin you installed, then restart Claude Code:
+```
+claude plugin marketplace update agent-sec-ops-kit-skills
+claude plugin update <plugin>@agent-sec-ops-kit-skills
+```
+
 
 ## Available Skills
 

@@ -12,37 +12,37 @@
     {
       "name": "appsec-skills",
       "description": "Application security skills for SAST, DAST, code review, and vulnerability detection",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
-        "./appsec/sast-semgrep",
-        "./appsec/sast-bandit",
-        "./appsec/dast-zap",
-        "./appsec/dast-nuclei",
         "./appsec/api-mitmproxy",
         "./appsec/api-spectral",
         "./appsec/dast-ffuf",
+        "./appsec/dast-nuclei",
+        "./appsec/dast-zap",
+        "./appsec/sast-bandit",
+        "./appsec/sast-semgrep",
         "./appsec/sca-blackduck"
       ]
     },
     {
       "name": "devsecops-skills",
       "description": "DevSecOps and CI/CD security automation skills for secrets detection, IaC scanning, and pipeline security",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
-        "./devsecops/secrets-gitleaks",
-        "./devsecops/iac-checkov",
         "./devsecops/container-grype",
         "./devsecops/container-hadolint",
+        "./devsecops/iac-checkov",
         "./devsecops/sca-trivy",
+        "./devsecops/secrets-gitleaks",
         "./devsecops/vuln-defectdojo"
       ]
     },
     {
       "name": "secsdlc-skills",
       "description": "Secure Software Development Lifecycle skills for code review automation, security feedback, and development workflow integration",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
         "./secsdlc/reviewdog",
@@ -53,7 +53,7 @@
     {
       "name": "compliance-skills",
       "description": "Compliance and policy-as-code skills for SOC2, PCI-DSS, GDPR, HIPAA validation using OPA and policy enforcement",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
         "./compliance/policy-opa"
@@ -62,7 +62,7 @@
     {
       "name": "incident-response-skills",
       "description": "Security incident response and detection engineering skills for Sigma rules, SIEM integration, and threat hunting",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
         "./incident-response/detection-sigma",
@@ -73,7 +73,7 @@
     {
       "name": "threatmodel-skills",
       "description": "Threat modeling and security architecture skills for STRIDE analysis, data flow diagrams, and risk assessment",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
         "./threatmodel/pytm"
@@ -82,18 +82,18 @@
     {
       "name": "offsec-skills",
       "description": "Offensive security skills for penetration testing, network reconnaissance, exploitation, and security assessments",
-      "source": "./",
+      "source": "./skills",
       "strict": false,
       "skills": [
-        "./offsec/pentest-metasploit",
-        "./offsec/recon-nmap",
+        "./offsec/analysis-tshark",
+        "./offsec/crack-hashcat",
         "./offsec/network-netcat",
         "./offsec/ot-security-assessment",
-        "./offsec/analysis-tshark",
-        "./offsec/webapp-sqlmap",
+        "./offsec/pentest-metasploit",
+        "./offsec/privesc-linpeas",
+        "./offsec/recon-nmap",
         "./offsec/webapp-nikto",
-        "./offsec/crack-hashcat",
-        "./offsec/privesc-linpeas"
+        "./offsec/webapp-sqlmap"
       ]
     }
   ]

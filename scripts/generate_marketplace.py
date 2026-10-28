@@ -22,7 +22,16 @@ CATEGORY_TO_PLUGIN = {
     "offsec": "offsec-skills",
 }
 
-MARKETPLACE_PATH_REL = "skills/.claude-plugin/marketplace.json"
+MARKETPLACE_PATH_REL = ".claude-plugin/marketplace.json"
+SKILLS_DIR = "skills"
+# OS metadata the repo .gitignores; never a plugin component
+IGNORED_TOP_LEVEL = {".DS_Store", "Thumbs.db"}
+
+
+def unexpected_top_level(skills_root: Path) -> list[str]:
+    """Return entries at the top of skills/ other than category dirs and _template/."""
+    allowed = set(CATEGORY_TO_PLUGIN) | {"_template"} | IGNORED_TOP_LEVEL
+    return sorted(p.name for p in skills_root.iterdir() if p.name not in allowed)
 
 
 def discover_skills(skills_root: Path) -> dict[str, list[str]]:
@@ -46,14 +55,26 @@ def main() -> None:
         print(f"Error: {MARKETPLACE_PATH_REL} not found. Create it first.", file=sys.stderr)
         sys.exit(1)
 
-    existing = json.loads(marketplace_path.read_text())
-    discovered = discover_skills(repo_root / "skills")
+    skills_root = repo_root / SKILLS_DIR
+    # skills/ is the root of every plugin, so anything else there (agents/, hooks/, .mcp.json) loads into all of them
+    stray = unexpected_top_level(skills_root)
+    if stray:
+        print(
+            "Only category directories and _template/ belong at the top of skills/.\n"
+            f"Move or remove: {', '.join(stray)}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
-    # Update the skills list for each known plugin; leave unknown plugins untouched
+    existing = json.loads(marketplace_path.read_text())
+    discovered = discover_skills(skills_root)
+
+    # Update the skills list and pin source for each known plugin; leave unknown plugins untouched
     for plugin in existing["plugins"]:
         name = plugin["name"]
         if name in discovered:
             plugin["skills"] = discovered[name]
+            plugin["source"] = f"./{SKILLS_DIR}"
 
     output = json.dumps(existing, indent=2) + "\n"
 

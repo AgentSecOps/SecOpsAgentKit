@@ -42,7 +42,7 @@ MAX_SKILL_LINES = 750
 MIN_DESCRIPTION_LEN = 100
 
 REPO_ROOT = Path(__file__).parent.parent
-MARKETPLACE_PATH = REPO_ROOT / "skills" / ".claude-plugin" / "marketplace.json"
+MARKETPLACE_PATH = REPO_ROOT / ".claude-plugin" / "marketplace.json"
 
 
 # ---------------------------------------------------------------------------
@@ -206,18 +206,22 @@ def check_marketplace(skill_dir: Path) -> list[CheckResult]:
 
     # Build relative path as it appears in marketplace.json: ./category/skill-name
     try:
-        rel = skill_dir.relative_to(REPO_ROOT / "skills")
+        rel = skill_dir.resolve().relative_to((REPO_ROOT / "skills").resolve())
         skill_path = "./" + str(rel).replace("\\", "/")
     except ValueError:
         return [_fail("marketplace_registered", "Could not compute relative skill path")]
 
-    all_skills: list[str] = []
+    # Resolve each entry through its plugin's source, as Claude Code does
+    target = skill_dir.resolve()
     for plugin in data.get("plugins", []):
-        all_skills.extend(plugin.get("skills", []))
-
-    if skill_path not in all_skills:
-        return [_fail("marketplace_registered", f"'{skill_path}' not found in marketplace.json")]
-    return [_pass("marketplace_registered", f"Registered as '{skill_path}'")]
+        source = plugin.get("source", "./")
+        if not isinstance(source, str):
+            continue
+        for path in plugin.get("skills", []):
+            if (REPO_ROOT / source / path).resolve() == target:
+                return [_pass("marketplace_registered", f"Registered as '{path}' in {plugin.get('name')}")]
+    return [_fail("marketplace_registered",
+                  f"no marketplace.json entry resolves to '{skill_path}' through its plugin's source")]
 
 
 # ---------------------------------------------------------------------------

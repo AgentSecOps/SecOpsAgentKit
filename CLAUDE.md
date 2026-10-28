@@ -92,7 +92,7 @@ The validator checks:
 
 ### Marketplace Integration
 
-Skills are registered in `skills/.claude-plugin/marketplace.json`:
+Skills are registered in `.claude-plugin/marketplace.json` at the repo root, the file Claude Code installs from. Each plugin's `source` is `./skills`, so skill paths are relative to `skills/`. That makes `skills/` the root of all 7 plugins: keep only the category directories and `_template/` at its top level. Anything else placed there, such as `agents/`, `commands/`, `hooks/` or `.mcp.json`, loads into every plugin, and `generate_marketplace.py --check` fails on it.
 
 ```json
 {
@@ -100,6 +100,8 @@ Skills are registered in `skills/.claude-plugin/marketplace.json`:
     {
       "name": "plugin-name",
       "description": "Plugin description",
+      "source": "./skills",
+      "strict": false,
       "skills": ["./category/skill-name"]
     }
   ]
@@ -169,7 +171,7 @@ Avoid generic development advice already known to Claude.
 4. Add reference docs if needed (link from SKILL.md)
 5. Add assets (templates, configs) if needed
 6. Run `./scripts/validate_skill.py skills/category/new-skill`
-7. Update `skills/.claude-plugin/marketplace.json`
+7. Update `.claude-plugin/marketplace.json`
 8. Test skill in real security scenarios
 
 ### Updating Skill Version
